@@ -42,5 +42,89 @@ import org.springframework.web.socket.config.annotation.*;
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer { 
 
 	@Override
+	public void registerStompEndpoints(StompEndpointRegistry registry) {
+		
+		registry.addEndpoint("/ws").withSockJS();
+	}
+
+	@Override
+	public void configureMessageBroker(MessageBrokerRegistry registry) {
+		
+		registry.setApplicationDestinationPrefixes("/app");
+		registry.enableSimpleBroker("/topic");
+	}
 }
 ```
+
+The `@EnableWebSocketMessageBroker` is used to enable our WebSocket server. We implement 
+`WebSocketMessageBrokerConfigurer` interface and provide implementation for some of its methods to 
+configure the websocket connection. 
+
+<br> 
+
+In the first method, we register a websocket endpoing that the clients will use to connect to our 
+websocket server. 
+
+Notice the use of `withSockJS()` with the endpoint configuration. **SockJS** is used to enable the 
+fallback options for browsers that don't support websocket. 
+
+
+You might have noticed the word **STOMP** in the method name. These methods come from Spring 
+framework's STOMP implementation. STOMP stands for **Simple Text Oriented Messaging Protocol** and is 
+a messaging protocol that defines the format and rules for data exchange. 
+
+> Why do we need STOMP? 
+
+WebSocket is just a communication protocol. It doesn't define things like how to send a message only to
+users who are subscribed to a particular topic, or how to send a message to a particular user. We need
+STOMP for these functionalities. 
+
+
+<br> 
+
+In the second method, we are configuring a message broker that will be used to route messages from 
+one client to another. 
+
+
+```
+registry.setApplicationDestinationPrefixes("/app");
+```
+
+The first line defines that the messages whose destination starts with "/app" should be routed to 
+message-handling methods (we will define these methods in the future). 
+
+
+```
+registry.enableSimpleBroker("/topic");
+```
+
+And the second line defines that the messages whose destination starts with "/topic" should be 
+reouted to the message broker. The message broker broadcasts messages to all the connected clients
+who are subscribed to a particular topic. 
+
+
+This enables a simple in-memory message broker, but we can also use other full-featured message brokers
+like `RabbitMQ` or `ActiveMQ`
+
+
+
+## Creating the ChatMessage Model 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
