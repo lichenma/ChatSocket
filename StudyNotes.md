@@ -73,7 +73,11 @@ You might have noticed the word **STOMP** in the method name. These methods come
 framework's STOMP implementation. STOMP stands for **Simple Text Oriented Messaging Protocol** and is 
 a messaging protocol that defines the format and rules for data exchange. 
 
+<br>
+
 > Why do we need STOMP? 
+
+<br>
 
 WebSocket is just a communication protocol. It doesn't define things like how to send a message only to
 users who are subscribed to a particular topic, or how to send a message to a particular user. We need
@@ -86,7 +90,7 @@ In the second method, we are configuring a message broker that will be used to r
 one client to another. 
 
 
-```
+```java
 registry.setApplicationDestinationPrefixes("/app");
 ```
 
@@ -94,7 +98,7 @@ The first line defines that the messages whose destination starts with "/app" sh
 message-handling methods (we will define these methods in the future). 
 
 
-```
+```java
 registry.enableSimpleBroker("/topic");
 ```
 
@@ -111,11 +115,106 @@ like `RabbitMQ` or `ActiveMQ`
 ## Creating the ChatMessage Model 
 
 
+`ChatMessage` model is the message payload that will be exchanged between the clients and the server. 
+Create a new package `model` inside `com.example.websocketchat` and create the `ChatMessage` class with
+the following contents: 
+
+
+```java
+package com.example.websocketchat.model;
+
+public class ChatMessage {
+	
+	private MessageType type;
+	private String content; 
+	private String sender; 
+
+	public enum MessageType {
+		
+		CHAT, 
+		JOIN,
+		LEAVE
+	}
+
+	public MessageType getType() {
+		
+		return type;
+	}
+
+	public void setType(MessageType type) {
+		
+		this.type = type;
+	}
+
+	public String getContent() {
+		
+		return content;
+	}
+
+	public void setContent(String content) {
+		
+		this.content = content; 
+	}
+
+	public String getSender() {
+		
+		return sender;
+	}
+
+	public void setSender(String sender) {
+		
+		this.sender = sender;
+	}
+}
+```
 
 
 
+## Creating the Controller for Sending and Receiving Messages 
+
+We will define the message handling methods in our controller. These methods will be responsible for
+receiving messages from one client and then broacasting it to others. 
+
+Create a new package called `controller` under `com.example.websocketchat` and then create the 
+`ChatController` class with the following content: 
 
 
+
+```java 
+package com.example.websocketchat.controller; 
+
+@Controller 
+public class ChatController {
+
+	@MessageMapping("/chat.sendMessage")
+	@SendTo("/topic/public")
+	public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
+		return chatMessage;
+	}
+
+	@MessageMapping("/chat.addUser")
+	@SendTo("/topic/public")
+	public ChatMessage addUser(@Payload ChatMessage chatMessage, 
+					SimpMessageHeaderAccessor headerAccessor) {
+		// Add username in web socket session
+		headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+		return chatMessage;
+	}
+}
+```
+
+
+Previously from the websocket configuration, all the messages sent from clients with a destination 
+starting with `/app` will be routed to these message handling methods annotated with `@MessageMapping`.
+
+
+
+> For Example : 
+> A message with desitination `/app/chat.sendMessage with be routed to the `sendMessage()` method, and
+> a message with desintation `/app/chat.addUser` will be routed to the `addUser()` method. 
+
+
+## Adding WebSocket Event Listeners 
 
 
 
