@@ -25,4 +25,22 @@ generate the project. This project is going to be a maven project and we are add
 
 ## WebSocket Configuration 
 
-The first step is to configure the websocket endpoint and message broker. 
+The first step is to configure the websocket endpoint and message broker. Let's create a new package 
+`config` inside `com.example.websocketchat`, and then create a new class called `WebSocketConfig`
+inside it. It will have the following contents: 
+
+```java 
+package com.example.websocketchat.config; 
+
+import org.springframework.context.annotation.Configuration; 
+import org.springframework.messaging.simp.config.MessageBrokerRegistry; 
+import org.springframework.web.socket.config.annotation.*; 
+
+
+@Configuration 
+@EnableWebSocketMessageBroker 
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer { 
+
+	@Override
+}
+```
