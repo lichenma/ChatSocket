@@ -17,5 +17,12 @@ to other techniques like comet and long-polling.
 
 ## Creating the Application 
 
+Similar to the TicTacToe game and the Spring REST API, we are going to be using Spring Initializr to
+generate the project. This project is going to be a maven project and we are adding `Websocket` and 
+`Rabbit MD` as the dependencies. Intellij Idea is my choice for IDE and now we can begin programming. 
 
 
+
+## WebSocket Configuration 
+
+The first step is to configure the websocket endpoint and message broker. 
