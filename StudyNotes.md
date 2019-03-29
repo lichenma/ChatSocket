@@ -346,7 +346,19 @@ The following is the complete code for `index.html` :
 
 ```
 
-## JavaScript - main.js 
+## JavaScript - main.js
+
+Now we can add the javascript required for connecting to the websocket endpoint and sending and 
+receiving messages. First, add the following code to the `main.js` file, and then we will cover some
+of the important methods in the file: 
+
+
+```javascript 
+
+'use strict';
+
+var usernamePage = document.querySelector('#username-page')
+
 
 
 
