@@ -53,7 +53,7 @@ function onConnected() {
 
 function onError(error) {
 
-    connectingElement.textCOntent = 'Could not connect to WebSocket Server - Please refresh this page and Try Again';
+    connectingElement.textContent = 'Could not connect to WebSocket Server - Please refresh this page and Try Again';
     connectingElement.style.color = 'red';
 }
 
@@ -89,9 +89,9 @@ function onMessageReceived(payload) {
         message.content = message.sender + ' joined!';
     } else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
-        message.content=message.sender + ' left!';
+        message.content = message.sender + ' left!';
     } else {
-        messElement.classList.add('chat-message');
+        messageElement.classList.add('chat-message');
 
         var avatarElement = document.createElement('i');
         var avatarText = document.createTextNode(message.sender[0]);
@@ -120,10 +120,10 @@ function onMessageReceived(payload) {
 function getAvatarColor(messageSender) {
 
     var hash = 0;
-    for (var i=0; i<messageSender.length; i++) {
+    for (var i=0; i< messageSender.length; i++) {
         hash = 31 * hash + messageSender.charCodeAt(i);
     }
-    var index=Math.abs(hash % colors.length);
+    var index = Math.abs(hash % colors.length);
     return colors[index];
 }
 
