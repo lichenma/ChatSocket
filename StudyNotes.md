@@ -217,7 +217,69 @@ starting with `/app` will be routed to these message handling methods annotated 
 
 ## Adding WebSocket Event Listeners 
 
+We will use event listeners to listen for socket connect and disconnect events so that we can log these
+events and also broadcast them wehn a user joins or leaves the chat room 
 
+
+
+```java 
+package com.example.websocketchat.cotnroller; 
+
+@Component 
+public class WebSocketEventListener { 
+	
+	private static final Logger logger = LoggerFactor.getLogger(WebSocketEventListener.class)
+
+	@Autowired 
+	private SimpMessageSendOperations messagingTemplate; 
+
+	@EventListener 
+	public void handleWebSocketConnectListener(SessionConnectedEvent event) {
+		
+		logger.info("Received a new web socket connected");
+	}
+
+	@Event Listener 
+	public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
+		
+		StompHeaderAccessor = StompHeaderAccessor.wrap(event.getMessage()); 
+
+		String username = (String) headerAccessor.getSessionAttributes().get("username");
+		if (username != null) {
+			
+			logger.info("User Disconnected: " + username);
+
+			ChatMessage chatMessage = new ChatMessage(); 
+			chatMessage.setType(ChatMessage.MessageType.LEAVE);
+			chatMessage.setSender(username);
+
+			messagingTemplate.convertAndSend("/topic/public", chatMessage);
+		}
+	}
+} 
+```
+
+We are already broadcasting the user join event in the `addUser()` method defined inside 
+`ChatController`. So we do not need to do anything in the SessionConnected event. 
+
+In the SessionDisconnect event, we have written code to extract the user's name from the websocket
+session and broadcast a user leave event to all the connected clients. 
+
+
+
+## Creating the Front-End
+
+
+We are going to be adding the following folders and files inside `src/main/resources` directory: 
+
+* `static/css/main.css`
+* `static/js/main.js`
+* `static/index.html`
+
+The `src/main/resources/static` folder is the default location for static files in Spring Boot. 
+
+
+## Creating the HTML - index.html
 
 
 
