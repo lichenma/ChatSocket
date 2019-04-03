@@ -211,7 +211,7 @@ starting with `/app` will be routed to these message handling methods annotated 
 
  **For Example** :
 
- * A message with destination `/app/chat.sendMessage with be routed to the `sendMessage()` method 
+ * A message with destination `/app/chat.sendMessage` with be routed to the `sendMessage()` method 
  * A message with destintation `/app/chat.addUser` will be routed to the `addUser()` method. 
 
 
