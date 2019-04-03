@@ -869,4 +869,63 @@ button.accent {
 We can now test and see the application in action by running the following command in the terminal
 
 
+```
+$ mvn spring-boot:run
+```
+
+The application starts on Spring Boot's default port 8080. You can browse the application at 
+`http://localhost:8080`. 
+
+
+
+
+
+
+## Using RabbitMQ Message Broker 
+
+If you want to use a full featured message broker like RabbitMQ instead of the simple in-memory message
+broker then just add the following dependencies in the `pom.xml` file 
+
+
+
+```xml 
+<!-- RabbitMQ Starter Dependency --> 
+<dependency> 
+	<groupId>org.springframework.boot</groupId> 
+	<artifactId>spring-boot-starter-amqp</artifactId> 
+</dependency> 
+
+<!-- Following dependency is also required for full featured STOMP broker relay -->
+<dependency> 
+	<groupId>org.springframework.boot</groupId> 
+	<artifactId>string-boot-starter-reactor-netty</artifactId> 
+</dependency> 
+```
+
+Once we have added the above dependences, we can now enable RabbitMQ message broker in the 
+`WebSocketConfig.java` file like this: 
+
+
+
+```java 
+public void configureMessageBroker(MessageBrokerRegistry registry) {
+	regist.setApplicationDestinationPrefixes("/app");
+
+	// Use this for enabling a Full featured broker like RabbitMQ
+	registry.enableStompBrokerRelay("/topic")
+		.setReplayHost("localhost")
+		.setReplayPort(61613)
+		.setClientLogin("guest")
+		.setClientPasscode("guest"):
+}
+```
+
+
+## Conclusion 
+
+
+Thanks again to Rajeev at Callicoder for providing an awesome tutorial to follow and through this 
+tutorial we have built a fully-fledged chat application from scratch using Spring Boot and WebSocket. 
+
+
 
